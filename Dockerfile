@@ -1,8 +1,8 @@
 FROM nvidia/cuda:9.0-cudnn7-devel-ubuntu16.04
 LABEL maintainer="nelson@cs.washington.edu"
 
-# caffe2 install with GPU support, but no MPI support
-# build with something like: docker build -t nelsonje/caffe2 .
+# caffe2 install with GPU support
+# build with something like: docker build -t caffe2 .
 
 # Install dependences via Apt
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -16,6 +16,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblmdb-dev \
     libopencv-dev \
     libsnappy-dev \
+    libopenmpi-dev \
+    openmpi-bin \
+    openmpi-doc \
     libprotobuf-dev \
     protobuf-compiler \
     python-dev \
@@ -55,6 +58,8 @@ RUN pip install --no-cache-dir --upgrade pip==9.0.3 setuptools wheel && \
 
 # Clone and build last released version
 RUN git clone https://github.com/pytorch/pytorch.git && cd pytorch && \
+    git fetch --tags && \
+    git checkout tags/v0.4.1 -b v0.4.1 && \
     git submodule update --init --recursive && \
     FULL_CAFFE2=1 EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_NATIVE_ARCH=ON" python setup.py install
 
