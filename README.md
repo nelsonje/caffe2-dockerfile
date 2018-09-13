@@ -13,8 +13,9 @@ docker build -t nelsonje/caffe2 .
 Run with a command like:
 ```
 docker run -it --rm --runtime nvidia --network host -u $UID:$GID -e HOME=$HOME -p 8888:8888 -v $HOME:$HOME nelsonje/caffe2 sh -c "jupyter notebook --no-browser --ip 0.0.0.0 $HOME"
-
 ```
+The script ```run.sh``` has this command in it.
+
 This will map your home directory into the Docker container, and fire up Jupyter with your home directory as its working directory.
 
 You will of course need to have Docker, the NVIDIA drivers, and the NVIDIA Docker container runtime installed to use this. Here are instructions for each of these:
