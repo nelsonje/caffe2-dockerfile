@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python-scipy \
     wget \
     libgflags-dev \
+    ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependences via pip
@@ -54,13 +55,18 @@ RUN pip install --no-cache-dir --upgrade pip==9.0.3 setuptools wheel && \
     six \
     tornado \
     mkl-devel \
-    typing
+    typing \
+    ninja
 
-# Clone and build last released version
+# Clone last released version
 RUN git clone https://github.com/pytorch/pytorch.git && cd pytorch && \
     git fetch --tags && \
     git checkout tags/v0.4.1 -b v0.4.1 && \
-    git submodule update --init --recursive && \
-    FULL_CAFFE2=1 EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_NATIVE_ARCH=ON" python setup.py install
+    git submodule update --init --recursive
+
+# Build
+RUN cd pytorch && \
+    FULL_CAFFE2=1 NO_DISTRIBUTED=1 EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_NATIVE_ARCH=ON" python setup.py install && \
+    cd .. && rm -rf pytorch
 
 ENV PYTHONPATH /usr/local
