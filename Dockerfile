@@ -66,7 +66,6 @@ RUN git clone https://github.com/pytorch/pytorch.git && cd pytorch && \
 
 # Build
 RUN cd pytorch && \
-    FULL_CAFFE2=1 EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_NATIVE_ARCH=ON" python setup.py install && \
-    cd .. && rm -rf pytorch
+    FULL_CAFFE2=1 EXTRA_CAFFE2_CMAKE_FLAGS="-DUSE_NATIVE_ARCH=ON -DUSE_OPENCV=ON -DBUILD_BINARY=ON" python setup.py install
 
 ENV PYTHONPATH /usr/local
